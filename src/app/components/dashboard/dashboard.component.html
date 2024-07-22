@@ -1,34 +1,58 @@
-<app-navbar></app-navbar>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/dashboard">Barra</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarScroll">
+      <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Pokes
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Lista</a></li>
+            <li><a class="dropdown-item" href="#">Agregar</a></li>
+          </ul>
+        </li>
+      </ul>
+      <div class="d-flex">
+        <button class="btn btn-outline-success me-2" type="button" (click)="logout()">Cerrar Sesion</button>
+        <button class="btn btn-sm btn-outline-secondary" type="button" (click)="showUserInfo()">Usuario</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
 <div class="container mt-5">
   <h1 style="color: antiquewhite; text-align: center;">¡¡Bienvenido Usuario!!</h1>
-  <button class="btn btn-primary mt-3" (click)="showUserInfo()">Ver Information</button>
+</div>
 
-  <!-- User Info Modal -->
-  <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="userModalLabel">User Information</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+<!-- User Info Modal -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="userModalLabel">User Information</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <img [src]="user?.avatar" class="rounded-circle mb-3" alt="User Avatar" *ngIf="user">
         </div>
-        <div class="modal-body">
-          <div class="text-center">
-            <img [src]="user?.avatar" class="rounded-circle mb-3" alt="User Avatar" *ngIf="user">
-          </div>
-          <ul class="list-group" *ngIf="user">
-            <li class="list-group-item"><strong>ID:</strong> {{ user.id }}</li>
-            <li class="list-group-item"><strong>Email:</strong> {{ user.email }}</li>
-            <li class="list-group-item"><strong>Name:</strong> {{ user.name }}</li>
-            <li class="list-group-item"><strong>Role:</strong> {{ user.role }}</li>
-            <li class="list-group-item"><strong>Created At:</strong> {{ user.creationAt }}</li>
-            <li class="list-group-item"><strong>Updated At:</strong> {{ user.updatedAt }}</li>
-          </ul>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
+        <ul class="list-group" *ngIf="user">
+          <li class="list-group-item"><strong>ID:</strong> {{ user.id }}</li>
+          <li class="list-group-item"><strong>Email:</strong> {{ user.email }}</li>
+          <li class="list-group-item"><strong>Name:</strong> {{ user.name }}</li>
+          <li class="list-group-item"><strong>Role:</strong> {{ user.role }}</li>
+          <li class="list-group-item"><strong>Created At:</strong> {{ user.creationAt }}</li>
+          <li class="list-group-item"><strong>Updated At:</strong> {{ user.updatedAt }}</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

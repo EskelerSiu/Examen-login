@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 declare var $: any;
 
@@ -11,16 +12,26 @@ declare var $: any;
 export class DashboardComponent implements OnInit {
   user: any;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
+
+  logout() {
+    alert('Cierre de sesiob exitoso!');
+    localStorage.removeItem('user');  
+    this.router.navigate(['/']);
+  }
 
   ngOnInit(): void {
     this.getUserInfo();
   }
 
   getUserInfo(): void {
-    this.http.get('https://api.escuelajs.co/api/v1/users/1').subscribe((data: any) => {
-      this.user = data;
-    });
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      this.user = JSON.parse(storedUser);
+    } else {
+      alert('No has iniciado sesion');
+      this.router.navigate(['/login']);
+    }
   }
 
   showUserInfo(): void {

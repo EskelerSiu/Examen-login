@@ -10,11 +10,16 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  hide = true;
+
+  togglePasswordVisibility() {
+    this.hide = !this.hide;
+  }
 
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]]
+      password: ['', [Validators.required, Validators.maxLength(8)]]
     });
   }
 
@@ -29,11 +34,11 @@ export class LoginComponent implements OnInit {
         .subscribe((users: any) => {
           const user = users.find((u: any) => u.email === email && u.password === password);
           if (user) {
-            alert('Login Successful');
+            alert('Inicio de sesion exitoso');
             localStorage.setItem('user', JSON.stringify(user)); 
             this.router.navigate(['/dashboard']);
           } else {
-            alert('Invalid Credentials');
+            alert('Credenciales incorretas');
           }
         });
     }
