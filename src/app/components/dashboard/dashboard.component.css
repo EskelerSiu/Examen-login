@@ -1,0 +1,14 @@
+.container {
+  margin-top: 20px;
+}
+
+.modal .modal-body img {
+  width: 100px;
+  height: 100px;
+}
+
+button{
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
