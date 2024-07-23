@@ -15,7 +15,7 @@ export class InicioComponent implements OnInit {
   constructor(private http: HttpClient, private router: Router) {}
 
   logout() {
-    alert('Cierre de sesiob exitoso!');
+    alert('Cierre de sesion exitoso!');
     localStorage.removeItem('user');  
     this.router.navigate(['/']);
   }

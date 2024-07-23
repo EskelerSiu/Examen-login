@@ -1,44 +1,76 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/inicio">Barra</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarScroll">
+      <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Productos
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/prin">Lista</a></li>
+          </ul>
+        </li>
+      </ul>
+      <div class="d-flex">
+        <button class="btn btn-outline-success me-2" type="button" (click)="logout()">Cerrar Sesion</button>
+        <button class="btn btn-sm btn-outline-secondary" type="button" (click)="showUserInfo()">Usuario</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
 <div class="container mt-5">
-  <h1 class="text-center">Lista de Pokémon</h1>
+  <h1 class="text-center">Lista de Productos</h1>
+  <div class="add-button-container">
+    <button style="background-color: rgba(255,255, 255, 0.5); border-color: rgba(255,255, 255, 0.5); color: black;" (click)="showAddForm()" class="btn btn-primary mb-3">Agregar Producto</button>
+  </div>
   <table class="table table-striped">
     <thead>
       <tr>
         <th>#</th>
         <th>Imagen</th>
-        <th>Nombre</th>
-        <th>Detalles</th>
+        <th>Título</th>
+        <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let pokemon of pokemons; let i = index">
+      <tr *ngFor="let ropa of pagedRopas; let i = index">
         <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
-        <td><img [src]="pokemon.image" alt="{{ pokemon.name }}" class="pokemon-image"></td>
-        <td>{{ pokemon.name | titlecase }}</td>
-        <td><button (click)="showDetails(pokemon)" class="btn btn-info btn-sm">Ver detalles</button></td>
+        <td><img [src]="ropa.image" alt="{{ ropa.title }}" class="product-image"></td>
+        <td>{{ ropa.title }}</td>
+        <td>
+          <button (click)="showDetails(ropa)" class="btn btn-info btn-sm">Ver detalles</button>
+          <button (click)="showUpdateForm(ropa)" class="btn btn-warning btn-sm">Actualizar</button>
+          <button (click)="deleteRopa(ropa)" class="btn btn-danger btn-sm">Eliminar</button>
+        </td>
       </tr>
     </tbody>
   </table>
-  <mat-paginator [showFirstLastButtons]="true" [length]="totalPokemons" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" (page)="onPageChange($event)">
+  <mat-paginator [length]="totalRopas" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" (page)="onPageChange($event)">
   </mat-paginator>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="pokemonModal" tabindex="-1" aria-labelledby="pokemonModalLabel" aria-hidden="true">
+<!-- Detalles Modal -->
+<div class="modal fade" id="ropaModal" tabindex="-1" aria-labelledby="ropaModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="pokemonModalLabel">Detalles del Pokémon</h5>
+        <h5 class="modal-title" id="ropaModalLabel">Detalles del Producto</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body" *ngIf="selectedPokemon">
+      <div class="modal-body" *ngIf="selectedRopa">
         <div class="text-center">
-          <img [src]="selectedPokemon.image" class="rounded-circle mb-3" alt="Pokemon Image">
+          <img [src]="selectedRopa.image" class="rounded-circle mb-3" alt="Product Image">
         </div>
         <ul class="list-group">
-          <li class="list-group-item"><strong>Nombre:</strong> {{ selectedPokemon.name | titlecase }}</li>
-          <li class="list-group-item"><strong>Altura:</strong> {{ selectedPokemon.height }}</li>
-          <li class="list-group-item"><strong>Peso:</strong> {{ selectedPokemon.weight }}</li>
-          <li class="list-group-item"><strong>Experiencia Base:</strong> {{ selectedPokemon.base_experience }}</li>
+          <li class="list-group-item"><strong>Título:</strong> {{ selectedRopa.title }}</li>
+          <li class="list-group-item"><strong>Precio:</strong> {{ selectedRopa.price }}</li>
+          <li class="list-group-item"><strong>Descripción:</strong> {{ selectedRopa.description }}</li>
+          <li class="list-group-item"><strong>Categoría:</strong> {{ selectedRopa.category }}</li>
         </ul>
       </div>
       <div class="modal-footer">
@@ -47,3 +79,112 @@
     </div>
   </div>
 </div>
+
+<!-- Actualizar Modal -->
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateModalLabel">Actualizar Producto</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="updateForm" (ngSubmit)="updateRopa()">
+          <div class="mb-3">
+            <label for="title" class="form-label">Título</label>
+            <input type="text" id="title" class="form-control" formControlName="title">
+          </div>
+          <div class="mb-3">
+            <label for="price" class="form-label">Precio</label>
+            <input type="number" id="price" class="form-control" formControlName="price">
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Descripción</label>
+            <textarea id="description" class="form-control" formControlName="description"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="category" class="form-label">Categoría</label>
+            <input type="text" id="category" class="form-control" formControlName="category">
+          </div>
+          <div class="mb-3">
+            <label for="image" class="form-label">Imagen URL</label>
+            <input type="text" id="image" class="form-control" formControlName="image">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!updateForm.valid">Guardar cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Agregar Modal -->
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">Agregar Producto</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addForm" (ngSubmit)="addRopa()">
+          <div class="mb-3">
+            <label for="title" class="form-label">Título</label>
+            <input type="text" id="title" class="form-control" formControlName="title">
+          </div>
+          <div class="mb-3">
+            <label for="price" class="form-label">Precio</label>
+            <input type="number" id="price" class="form-control" formControlName="price">
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Descripción</label>
+            <textarea id="description" class="form-control" formControlName="description"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="category" class="form-label">Categoría</label>
+            <input type="text" id="category" class="form-control" formControlName="category">
+          </div>
+          <div class="mb-3">
+            <label for="image" class="form-label">Imagen URL</label>
+            <input type="text" id="image" class="form-control" formControlName="image">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!addForm.valid">Agregar Producto</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="userModalLabel">Informacion del usuario</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <img [src]="user?.avatar" class="rounded-circle mb-3" alt="User Avatar" *ngIf="user">
+        </div>
+        <ul class="list-group" *ngIf="user">
+          <li class="list-group-item"><strong>ID:</strong> {{ user.id }}</li>
+          <li class="list-group-item"><strong>Email:</strong> {{ user.email }}</li>
+          <li class="list-group-item"><strong>Name:</strong> {{ user.name }}</li>
+          <li class="list-group-item"><strong>Role:</strong> {{ user.role }}</li>
+          <li class="list-group-item"><strong>Created At:</strong> {{ user.creationAt }}</li>
+          <li class="list-group-item"><strong>Updated At:</strong> {{ user.updatedAt }}</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
