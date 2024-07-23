@@ -50,7 +50,7 @@
       </tr>
     </tbody>
   </table>
-  <mat-paginator [length]="totalRopas" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" (page)="onPageChange($event)">
+  <mat-paginator [showFirstLastButtons]="true" [length]="totalRopas" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" (page)="onPageChange($event)">
   </mat-paginator>
 </div>
 
