@@ -1,0 +1,49 @@
+<div class="container mt-5">
+  <h1 class="text-center">Lista de Pokémon</h1>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Imagen</th>
+        <th>Nombre</th>
+        <th>Detalles</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let pokemon of pokemons; let i = index">
+        <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+        <td><img [src]="pokemon.image" alt="{{ pokemon.name }}" class="pokemon-image"></td>
+        <td>{{ pokemon.name | titlecase }}</td>
+        <td><button (click)="showDetails(pokemon)" class="btn btn-info btn-sm">Ver detalles</button></td>
+      </tr>
+    </tbody>
+  </table>
+  <mat-paginator [showFirstLastButtons]="true" [length]="totalPokemons" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" (page)="onPageChange($event)">
+  </mat-paginator>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="pokemonModal" tabindex="-1" aria-labelledby="pokemonModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="pokemonModalLabel">Detalles del Pokémon</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" *ngIf="selectedPokemon">
+        <div class="text-center">
+          <img [src]="selectedPokemon.image" class="rounded-circle mb-3" alt="Pokemon Image">
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item"><strong>Nombre:</strong> {{ selectedPokemon.name | titlecase }}</li>
+          <li class="list-group-item"><strong>Altura:</strong> {{ selectedPokemon.height }}</li>
+          <li class="list-group-item"><strong>Peso:</strong> {{ selectedPokemon.weight }}</li>
+          <li class="list-group-item"><strong>Experiencia Base:</strong> {{ selectedPokemon.base_experience }}</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

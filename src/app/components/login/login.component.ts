@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
           if (user) {
             alert('Inicio de sesion exitoso');
             localStorage.setItem('user', JSON.stringify(user)); 
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/inicio']);
           } else {
             alert('Credenciales incorretas');
           }
